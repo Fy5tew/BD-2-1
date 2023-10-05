@@ -1,0 +1,34 @@
+№14. Списание оборудования. 
+
+
+Equipment
+	* ID ( varchar(10) )
+	Name ( varchar(50) )
+	Type ( varchar(20) )
+
+
+Worker
+	* ID ( varchar(10) )
+	LastName ( varchar(25) )
+	FirstName ( varchar(15) )
+	Patronymic ( varchar(20) )
+	JobTitle ( varchar(50) )
+	EmploymentDate ( date )
+
+
+Arrival
+	* ID ( varchar(10) )
+	Equipment ( varchar(10) )
+	ArrivalDate ( datetime )
+	Quantity ( int )
+	InstallationDepartment ( varchar(50) )
+	Responsible ( varchar(10) )
+
+
+WriteOff
+	* ID ( varchar(10) )
+	Arrival ( varchar(10) )
+	Quantity ( int )
+	WriteOffDate ( datetime )
+	Reason ( varchar(100) )
+	Responsible ( varchar(10) )
