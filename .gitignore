@@ -1,2 +1,6 @@
 /*/
 !/lab*/
+
+# SQL Server files
+*.mdf
+*.ldf
