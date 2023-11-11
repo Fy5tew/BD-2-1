@@ -3,39 +3,53 @@ GO
 
 
 -- Задание №4.2
--- 4.2
 DROP FUNCTION dbo.ShortenFIO;
 GO
 
 CREATE FUNCTION dbo.ShortenFIO(@FullFIO varchar(100))
-RETURNS varchar(50)
+RETURNS nvarchar(50)
 AS
 BEGIN
 	DECLARE
-		@SplittedFIO TABLE (
+		@SplittedValues TABLE (
 			Row int,
-			Value varchar(25)
+			Value nvarchar(25)
 		)
 	;
 	DECLARE
-		@LastName		varchar(25),
-		@FirstName		varchar(25),
-		@Surname		varchar(25),
-		@ShortenedFIO	varchar(50)
+		@ShortenedValues TABLE (
+			Row int,
+			Value nvarchar(1)
+		)
 	;
 
-	INSERT INTO @SplittedFIO (Row, Value)
+	INSERT INTO @SplittedValues (Row, Value)
 	SELECT 
 		ROW_NUMBER() OVER(ORDER BY (SELECT NULL)) AS Row, 
 		value AS Value
 	FROM string_split(@FullFIO, ' ')
 	;
 
-	SET @LastName = (SELECT TOP(1) Value FROM @SplittedFIO WHERE Row = 1);
-	SET @FirstName = (SELECT TOP(1) Value FROM @SplittedFIO WHERE Row = 2);
-	SET @Surname = (SELECT TOP(1) Value FROM @SplittedFIO WHERE Row = 3);
+	INSERT INTO @ShortenedValues (Row, Value)
+	SELECT
+		Row AS Row,
+		SUBSTRING(Value, 0, 2) AS Value
+	FROM @SplittedValues
+	;
 
-	SET @ShortenedFIO = @LastName + ' ' + SUBSTRING(@FirstName, 0, 2) + '. ' + SUBSTRING(@Surname, 0, 2) + '.'; 
+	DECLARE @ShortenedFIO nvarchar(25) = (SELECT Value FROM @SplittedValues WHERE Row = 1);
+
+	DECLARE 
+		@Counter	int = 1,
+		@Count		int = (SELECT COUNT(*) FROM @ShortenedValues)
+	;
+
+	WHILE @Counter < @Count
+	BEGIN
+		SET @Counter = @Counter + 1;
+		DECLARE @Value nvarchar(1) = (SELECT Value FROM @ShortenedValues WHERE Row = @Counter);
+		SET @ShortenedFIO = @ShortenedFIO + ' ' + @Value + '.';
+	END
 
 	RETURN @ShortenedFIO;
 END
