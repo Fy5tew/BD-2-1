@@ -256,7 +256,7 @@ DECLARE ReportCursor CURSOR LOCAL STATIC FOR
 			SELECT COUNT(*) 
 			FROM TEACHER t 
 			WHERE t.PULPIT = p.PULPIT
-		) AS 'Количество преплдавателей',
+		) AS 'Количество преподавателей',
 		(
 			SELECT STRING_AGG(LTRIM(RTRIM(s.SUBJECT)), ', ') 
 			FROM SUBJECT s 
